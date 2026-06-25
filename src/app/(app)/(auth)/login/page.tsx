@@ -8,7 +8,7 @@ import PasswordForm from '@/components/auth/PasswordForm'
 
 function LoginCard() {
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirect') || '/'
+  const redirectTo = searchParams?.get('redirect') || '/'
 
   return (
     <div className="w-full max-w-md">
