@@ -1,0 +1,12 @@
+service:
+  name: frontend
+  type: nextjs
+  build:
+    command: npm install && npm run build
+  start:
+    command: npm start
+  ports:
+    - 3000
+  env:
+    - NEXT_PUBLIC_API_URL=https://farzam.runflare.run
+    - NEXT_PUBLIC_SITE_URL=https://front-farzam.runflare.run

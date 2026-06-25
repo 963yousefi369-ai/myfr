@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /profile/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /payment/
+
+Sitemap: https://atifarzam.ir/sitemap.xml
