@@ -1,18 +1,20 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '../../context/AdminAuthContext.jsx'
 
 export default function AdminLogin() {
   const { isAdminLoggedIn, adminLogin } = useAdminAuth()
-  const navigate = useNavigate()
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (isAdminLoggedIn) navigate('/admin', { replace: true })
-  }, [isAdminLoggedIn, navigate])
+    if (isAdminLoggedIn) router.replace('/admin')
+  }, [isAdminLoggedIn, router])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -21,7 +23,7 @@ export default function AdminLogin() {
     const result = await adminLogin(email, password)
     setLoading(false)
     if (result.success) {
-      navigate('/admin', { replace: true })
+      router.replace('/admin')
     } else {
       setError(result.error || 'ایمیل یا رمز عبور اشتباه است')
     }
