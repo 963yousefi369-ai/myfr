@@ -1,7 +1,3 @@
-import PocketBase from 'pocketbase'
-
-const pbUrl = process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090'
-
-export const pb = new PocketBase(pbUrl)
-
-export default pb
+// این فایل دیگر استفاده نمی‌شود - PocketBase حذف شد
+export const pb = null
+export default null

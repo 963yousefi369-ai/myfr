@@ -1,50 +1,43 @@
+'use client'
+
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { pb } from '../api/pocketbase.js'
 
 const AdminAuthContext = createContext(null)
-const ADMIN_KEY = 'pb_admin_auth'
+
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@atifarzam.ir'
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin1234'
+const STORAGE_KEY = 'admin_auth'
 
 export function AdminAuthProvider({ children }) {
   const [admin, setAdmin] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // بازیابی session از pb.authStore
-    if (pb.authStore.isValid && pb.authStore.model) {
-      setAdmin(pb.authStore.model)
-    }
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY)
+      if (stored) {
+        setAdmin(JSON.parse(stored))
+      }
+    } catch {}
     setLoading(false)
-
-    // گوش دادن به تغییرات authStore
-    const unsub = pb.authStore.onChange((token, model) => {
-      setAdmin(model && pb.authStore.isValid ? model : null)
-    })
-    return () => unsub()
   }, [])
 
   async function adminLogin(email, password) {
-    try {
-      // PocketBase v0.22+ از _superusers استفاده می‌کند
-      let authData
-      try {
-        authData = await pb.collection('_superusers').authWithPassword(email, password)
-      } catch {
-        // fallback برای نسخه‌های قدیمی‌تر
-        authData = await pb.admins.authWithPassword(email, password)
-      }
-      setAdmin(authData.record || authData.admin)
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      const user = { email }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
+      setAdmin(user)
       return { success: true }
-    } catch (err) {
-      return { success: false, error: err.message || 'خطا در ورود' }
     }
+    return { success: false, error: 'ایمیل یا رمز عبور اشتباه است' }
   }
 
   function adminLogout() {
-    pb.authStore.clear()
+    localStorage.removeItem(STORAGE_KEY)
     setAdmin(null)
   }
 
-  const isAdminLoggedIn = !!admin && pb.authStore.isValid
+  const isAdminLoggedIn = !!admin
 
   return (
     <AdminAuthContext.Provider value={{ admin, loading, isAdminLoggedIn, adminLogin, adminLogout }}>
