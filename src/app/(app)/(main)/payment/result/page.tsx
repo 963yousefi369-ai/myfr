@@ -32,8 +32,8 @@ function PaymentResultInner() {
     if (token) setHydrated(true)
   }, [mounted, token])
 
-  const status = searchParams.get('status') ?? 'failed'
-  const orderId = searchParams.get('order_id')
+  const status = searchParams?.get('status') ?? 'failed'
+  const orderId = searchParams?.get('order_id') ?? null
   const effectiveToken = token || getTokenFromStorage()
 
   if (!mounted || !hydrated) {
