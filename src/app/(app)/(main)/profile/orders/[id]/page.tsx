@@ -32,7 +32,8 @@ import { formatPrice, formatDate } from '@/lib/utils'
 import BreadcrumbTrail from '@/components/trail/BreadcrumbTrail'
 
 export default function OrderDetailPage() {
-  const { id } = useParams<{ id: string }>()
+  const params = useParams()
+  const id = (params?.id as string) ?? ''
   const { token } = useAuthStore()
   const [order, setOrder] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -40,7 +41,7 @@ export default function OrderDetailPage() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (!token) return
+    if (!token || !id) return
     getOrder(token, id)
       .then(setOrder)
       .catch(() => setError('خطا در بارگذاری سفارش'))
@@ -48,7 +49,7 @@ export default function OrderDetailPage() {
   }, [token, id])
 
   const handleCancel = async () => {
-    if (!token) return
+    if (!token || !id) return
     setCancelling(true)
     try {
       await cancelOrder(token, id)
